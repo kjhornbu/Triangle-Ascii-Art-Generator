@@ -27,13 +27,16 @@ if (dir_triangle == ">") or (dir_triangle == "<"):
             if n == 0:
                 triangle_queue[size_triangle-1][size_triangle-1] = 1
             else:
-                check = np.nonzero(triangle_queue[:,((size_triangle-1)-n)+1]==1)
+                check = np.nonzero(triangle_queue[:,-n]==1)
                 
                 position_increase = check[0]+1
                 position_decrease = check[0]-1
 
-                triangle_queue[np.unique(np.hstack((position_increase, position_decrease)))][(size_triangle-1)-n] = 1
-  
+                new_positions=np.unique(np.hstack((position_increase, position_decrease)))
+                # For some reason needed to assign each row position into the queue uniquely unlike the columns (up/down triangles).
+                for position in new_positions:
+                    triangle_queue[position][(size_triangle-1)-n] = 1
+                                   
     elif dir_triangle == "<":
     #The Left Facing Triangle Queue Block
         for n in range(size_triangle):
@@ -45,9 +48,12 @@ if (dir_triangle == ">") or (dir_triangle == "<"):
                 position_increase = check[0]+1
                 position_decrease = check[0]-1
                 
-                triangle_queue[np.unique(np.hstack((position_increase, position_decrease)))][n] = 1
+                new_positions=np.unique(np.hstack((position_increase, position_decrease))) 
+                # For some reason needed to assign each row position into the queue uniquely unlike the columns (up/down triangles).
+                for position in new_positions:
+                    triangle_queue[position][n] = 1
 
-elif (dir_triangle == "^") or (dir_triangle == "v"): #these both work it is the left right that is weird now...2024-02-23 KH
+elif (dir_triangle == "^") or (dir_triangle == "v"): 
     triangle_queue=np.zeros((size_triangle,size_triangle+(size_triangle-1)))
 
     if dir_triangle == "^":
